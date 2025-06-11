@@ -223,12 +223,9 @@ public class FranchiseStockHistoryService {
                 .ifPresent(fs -> fs.subtractQuantity(quantity));
 
         //  본사 재고 복구
-        HeadquarterStock headquarterStock = headquarterStockRepository
+        headquarterStockRepository
                 .findByHeadquarterAndIngredientWithLock(franchise.getHeadquarterId().getHeadquarterId(), ingredient.getIngredientId())
-                .orElse(null);
-        if (headquarterStock != null) {
-            headquarterStock.addQuantity(quantity);
-        }
+                .ifPresent(headquarterStock -> headquarterStock.addQuantity(quantity));
 
         //  삭제
         franchiseStockHistoryRepository.delete(history);
